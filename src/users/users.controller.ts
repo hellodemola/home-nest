@@ -8,8 +8,8 @@ export class UsersController {
 
   @Post()
   async createUser(@Body() req: CreateUserDto) {
-    this.userService.create(req);
-    return { user: req };
+    const isUser = await this.userService.create(req);
+    return isUser;
   }
 
   @Get()
