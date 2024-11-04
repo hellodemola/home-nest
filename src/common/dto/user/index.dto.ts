@@ -16,3 +16,17 @@ export class CreateUserDto {
   @IsPhoneNumber()
   phone: number;
 }
+
+export class UpdateUserDto {
+  @Length(6, 18)
+  password: string;
+
+  @Length(3, 18)
+  firstName: string;
+
+  @Length(3, 18)
+  lastName: string;
+
+  @IsPhoneNumber()
+  phone: number;
+}

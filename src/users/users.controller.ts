@@ -1,5 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { CreateUserDto } from 'src/common/dto/user/index.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user/index.dto';
 import { UsersService } from './users.service';
 
 @Controller('v1/api/users')
@@ -9,6 +17,7 @@ export class UsersController {
   @Post()
   async createUser(@Body() req: CreateUserDto) {
     const isUser = await this.userService.create(req);
+    if (!isUser) return req.email + ' already exist';
     return isUser;
   }
 
@@ -18,9 +27,19 @@ export class UsersController {
   }
 
   @Get(':email')
-  findOne(@Param('email') param: string) {
-    const user = this.userService.findOne(param);
+  async findOne(@Param('email') param: string) {
+    const user = await this.userService.findOne(param);
     if (user) return user;
     return 'User not found';
+  }
+
+  @Patch(':email')
+  async updateOne(@Body() req: UpdateUserDto, @Param('email') params: string) {
+    return await this.userService.updateOne(params, req);
+  }
+
+  @Delete(':email')
+  async deleteOne(@Param('email') params: string) {
+    return await this.userService.deleteOne(params);
   }
 }
