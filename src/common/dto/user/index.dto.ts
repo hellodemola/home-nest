@@ -18,9 +18,6 @@ export class CreateUserDto {
 }
 
 export class UpdateUserDto {
-  @Length(6, 18)
-  password: string;
-
   @Length(3, 18)
   firstName: string;
 

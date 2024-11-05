@@ -24,7 +24,7 @@ export class UsersService {
     throw new HttpException('User already exist', HttpStatus.CONFLICT);
   }
 
-  findOne(email: string): Promise<User[]> {
+  findOne(email: string): Promise<User> {
     return this.userModel.findOne({ email });
   }
 
