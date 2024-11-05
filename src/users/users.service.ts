@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
@@ -20,6 +20,8 @@ export class UsersService {
       });
       return createUser.save();
     }
+
+    throw new HttpException('User already exist', HttpStatus.CONFLICT);
   }
 
   findOne(email: string): Promise<User[]> {
@@ -38,7 +40,9 @@ export class UsersService {
       .then((res) => {
         return res;
       })
-      .catch((err) => console.log({ err }));
+      .catch((err) => {
+        throw new HttpException(err, HttpStatus.NOT_FOUND);
+      });
   }
 
   deleteOne(email: string) {

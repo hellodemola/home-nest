@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -17,29 +19,55 @@ export class UsersController {
   @Post()
   async createUser(@Body() req: CreateUserDto) {
     const isUser = await this.userService.create(req);
-    if (!isUser) return req.email + ' already exist';
-    return isUser;
+    return {
+      data: isUser,
+      message: `${isUser.email} has been successfully added`,
+      status: 'success',
+    };
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll() {
+    const users = await this.userService.findAll();
+    return {
+      data: users,
+      message: '',
+      status: 'success',
+    };
   }
 
   @Get(':email')
   async findOne(@Param('email') param: string) {
     const user = await this.userService.findOne(param);
-    if (user) return user;
-    return 'User not found';
+    if (user)
+      return {
+        data: user,
+        message: `details of ${param} found`,
+        status: 'success',
+      };
+    throw new HttpException(`${param} not found`, HttpStatus.NOT_FOUND);
   }
 
   @Patch(':email')
   async updateOne(@Body() req: UpdateUserDto, @Param('email') params: string) {
-    return await this.userService.updateOne(params, req);
+    const user = await this.userService.updateOne(params, req);
+    if (user)
+      return {
+        data: user,
+        message: `${params} updated`,
+        status: 'success',
+      };
+    throw new HttpException(`${params} not found`, HttpStatus.NOT_FOUND);
   }
 
   @Delete(':email')
   async deleteOne(@Param('email') params: string) {
-    return await this.userService.deleteOne(params);
+    const user = await this.userService.deleteOne(params);
+    if (user)
+      return {
+        message: `${params} has been deleted`,
+        status: 'success',
+      };
+    throw new HttpException(`${params} not found`, HttpStatus.NOT_FOUND);
   }
 }
