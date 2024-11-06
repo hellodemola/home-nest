@@ -3,18 +3,18 @@ import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
   @IsEmail()
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value.trim().toLowerCase())
   email: string;
 
   @Length(6, 18)
   password: string;
 
   @Length(3, 18)
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value.trim().toLowerCase())
   firstName: string;
 
   @Length(3, 18)
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value.trim().toLowerCase())
   lastName: string;
 
   @IsPhoneNumber()
@@ -23,11 +23,11 @@ export class CreateUserDto {
 
 export class UpdateUserDto {
   @Length(3, 18)
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value.trim().toLowerCase())
   firstName: string;
 
   @Length(3, 18)
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value.trim().toLowerCase())
   lastName: string;
 
   @IsPhoneNumber()
