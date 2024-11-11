@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { PassportModule } from '@nestjs/passport';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/common/schemas/users';
-import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -20,7 +20,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
   ],
-  controllers: [UsersController],
-  providers: [UsersService],
+  controllers: [AuthController],
+  providers: [AuthService],
 })
-export class UsersModule {}
+export class AuthModule {}

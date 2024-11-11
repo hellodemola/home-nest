@@ -14,6 +14,18 @@ export class User {
   @Prop({ required: true })
   email: string;
 
+  @Prop([String])
+  secondaryEmails: string[];
+
+  @Prop()
+  address: string;
+
+  @Prop()
+  __id: string;
+
+  @Prop([String])
+  secondaryPhones: string[];
+
   @Prop({ required: true })
   phone: number;
 
@@ -22,6 +34,9 @@ export class User {
 
   @Prop()
   role: 'customer' | 'admin';
+
+  @Prop()
+  isActive: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
