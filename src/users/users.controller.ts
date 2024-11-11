@@ -8,9 +8,11 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user/index.dto';
 import { UsersService } from './users.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('v1/api/users')
 export class UsersController {
@@ -26,6 +28,7 @@ export class UsersController {
     };
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   async findAll() {
     const users = await this.userService.findAll();
@@ -48,6 +51,7 @@ export class UsersController {
     throw new HttpException(`${param} not found`, HttpStatus.NOT_FOUND);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':email')
   async updateOne(@Body() req: UpdateUserDto, @Param('email') params: string) {
     const user = await this.userService.updateOne(params, req);

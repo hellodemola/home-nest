@@ -1,12 +1,16 @@
 import {
   Body,
   Controller,
-  HttpException,
-  HttpStatus,
   Post,
+  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
-import { LoginUserDto } from 'src/common/dto/auth/index.dto';
+import {
+  LoginUserDto,
+  ResetPasswordParamsDto,
+} from 'src/common/dto/auth/index.dto';
 import { AuthService } from './auth.service';
+import { AuthGuard } from './auth.guard';
 
 @Controller('v1/api/auth')
 export class AuthController {
@@ -14,16 +18,24 @@ export class AuthController {
   @Post('login')
   async Login(@Body() req: LoginUserDto) {
     const validateUser = await this.authService.ValidateUser(req);
-    if (!validateUser)
-      throw new HttpException(
-        'User or password is not correct',
-        HttpStatus.BAD_REQUEST,
-      );
-    const userDetails = await this.authService.Login(req);
+    if (!validateUser) throw new UnauthorizedException();
+    const userDetails = await this.authService.Login(validateUser);
     return {
       message: 'Login user',
       data: userDetails,
       status: 'successfully',
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('reset-password')
+  async ResetPassword(@Body() req: ResetPasswordParamsDto) {
+    const isUser = await this.authService.ChangePassword(req.password, req.id);
+
+    return {
+      data: isUser,
+      message: 'Password change successfully',
+      status: 'Success',
     };
   }
 }
